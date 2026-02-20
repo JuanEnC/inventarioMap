@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control de Inventario</title>
+    <script src="./producto.js"></script>
+    <script src="./inventario.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div>
+      <form>
+        <label for="txtCod"> Codigo:<input type="number" id="txtCod" /> </label>
+        <label for="txtNom"> Nombre:<input type="text" id="txtNom" /> </label>
+        <label> Precio:<input type="number" id="txtPre" /> </label>
+        <label> Cantidad:<input type="number" id="txtCan" value="0" /> </label>
+        <label>
+          Fecha de Caducidad:<input type="date" id="txtFechaCad" />
+        </label>
+
+        <button type="button" id="btnAdd">Agregar</button>
+        <button type="button" id="btnFind">Buscar</button>
+        <button type="reset">Cancelar</button>
+      </form>
+    </div>
+
+    <div id="notificacion"></div>
+
+    <script>
+      let timeoutId;
+
+      function mostrarNotificacion(mensaje, tipo) {
+        const notif = document.getElementById("notificacion");
+
+        notif.textContent = mensaje;
+
+        notif.className = "";
+
+        notif.classList.add(tipo);
+
+        notif.style.display = "block";
+
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+
+        timeoutId = setTimeout(() => {
+          notif.style.display = "none";
+        }, 3000);
+      }
+
+      // --- LÓGICA DE BOTONES ---
+
+      const btnAdd = document.getElementById("btnAdd");
+      btnAdd.addEventListener("click", () => {
+        let codigo = document.getElementById("txtCod").value;
+        let nombre = document.getElementById("txtNom").value;
+        let precio = document.getElementById("txtPre").value;
+        let cantidad = document.getElementById("txtCan").value;
+        let fechaCad = document.getElementById("txtFechaCad").value;
+
+        if (!codigo) {
+          mostrarNotificacion("El código es obligatorio", "error");
+          return;
+        }
+
+        let producto = new Producto(codigo, nombre, cantidad, precio, fechaCad);
+        let res = agregarProducto(producto);
+
+        if (res == false) {
+          mostrarNotificacion("Error: El código ya existe", "error");
+        } else {
+          mostrarNotificacion("Producto agregado correctamente", "exito");
+        }
+      });
+
+      const btnFind = document.getElementById("btnFind");
+      btnFind.addEventListener("click", () => {
+        let codigo = document.getElementById("txtCod").value;
+        let res = buscarProducto(codigo);
+
+        if (!res) {
+          mostrarNotificacion("Producto Inexistente", "error");
+        } else {
+          console.log(res);
+          document.getElementById("txtNom").value = res.nombre;
+          document.getElementById("txtPre").value = res.precio;
+          document.getElementById("txtCan").value = res.cantidad;
+          document.getElementById("txtFechaCad").value = res.fechaCad;
+          mostrarNotificacion("Producto Encontrado", "exito");
+        }
+      });
+    </script>
+  </body>
+</html>
