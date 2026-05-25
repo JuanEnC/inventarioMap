@@ -36,7 +36,7 @@ Este proyecto no requiere de dependencias, base de datos ni servidores en tiempo
 Clona el repositorio:
 
 ```
-git clone [https://github.com/JuanEnC/inventarioMap.git](https://github.com/JuanEnC/inventarioMap.git)
+git clone https://github.com/JuanEnC/inventarioMap.git
 ```
 Navega al directorio del proyecto:
 
